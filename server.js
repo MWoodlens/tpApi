@@ -6,8 +6,7 @@ const produits= [{"id":1,"title":"iPhone 9","description":"An apple mobile which
 
 const authenticate=(req,res,next)=>{
     const token=req.headers.authorization;
-    res.set('Access-Control-Allow-Origin','*');
-    [scheme,tk]=token.split(' ');
+    const [scheme,tk]=token.split(' ');
 
     if(scheme!=='Bearer'){
         return res.sendStatus(401);
@@ -19,6 +18,19 @@ const authenticate=(req,res,next)=>{
 
     next();
 }
+
+const cors=(req,res,next)=>{
+    const allowedOrigins=['localhost:8000','localhost:9007'];
+    const origin = req.headers.origin;
+    if(allowedOrigins.includes(origin)){
+        res.set('Access-Control-Allow-Origin',origin);
+    }
+    res.set('Access-Control-Allow-Methods','GET');
+    next();
+}
+
+app.use(cors);
+
 
 app.get('/products',authenticate,(req,res)=>{
     if(produits!==undefined){
